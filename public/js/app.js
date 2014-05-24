@@ -20,7 +20,7 @@
 var Task = Backbone.Model.extend({
 	defaults : {
 		id: null,
-		title:'Default Value'
+		title:'Default Value'	
 	}
 });
 
@@ -48,7 +48,7 @@ var TasksView = Backbone.View.extend({
 
 	initialize: function() {
 		this.render();
-		this.collection.on('change', this.shout, this);
+		this.collection.on('add', this.addOne, this)
 	},
 
 	render: function() {
@@ -85,7 +85,9 @@ var TaskView = Backbone.View.extend({
 	},
 
 	shout: function(task) {
-		console.log('Model Changed');
+		console.log('Model Changed : ');
+		console.log(task);
+		this.render();	
 	}
 });
 
