@@ -2,10 +2,41 @@
 <html>
 <head>
 	<title>Home Page</title>
+
+<script src="js/lib/jquery-2.1.1.js"></script>
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
-<script src="js/lib/jquery-2.1.1.js"></script>
+
+	<div class="well">
+		<h4>Test</h4>
+		<form id="addTask" action=''>
+			<input  type="text" placeholder="new task">
+
+			<input type="submit" value="add" class="btn btn-sm btn-primary">
+		</form>
+	</div>
+
+
+	<div class="tasks">
+	<script id="taskTemplate" type="text/template">
+	<span>
+		<strong><%- title %></strong> <em>(uid : <%- id %>)</em>
+	</span>
+	 <button class="edit btn btn-link">Edit</button>  <button class="delete btn btn-link">Delete</button>
+	</script>
+	</div>
+
+
 <script src="js/lib/underscore.js"></script>
 <script src="js/lib/backbone.js"></script>
 

@@ -18,10 +18,30 @@
 	Task Model
 /-----------------------------------------*/
 var Task = Backbone.Model.extend({
+
 	defaults : {
 		id: null,
-		title:'Default Value'	
-	}
+		title: null
+	},
+
+	parse: function(response){
+		// Parse newly created model
+		if(response.object) {
+			response.object.id = response.object.uid; //adding `id`=`uid`
+			return response.object;
+		}
+		return response;
+	},
+
+	url: function(){
+		var modelURL = 'https://api.built.io/v1/classes/todo/objects/';
+		
+		if(this.id) {
+			return modelURL + this.id;
+		}
+		console.log(modelURL + this.id);
+	    return modelURL;
+  	}
 });
 
 /*----------------------------------------/
@@ -30,10 +50,17 @@ var Task = Backbone.Model.extend({
 var Tasks = Backbone.Collection.extend({
 
 	model: Task,
-
-	// Parse objects
+	
+	//Parse response in collection
 	parse: function(response) {
-		return response.objects;
+		var model = $.map(response.objects, function(response){
+			return {
+				id:response.uid,
+				title:response.title,
+			}
+		});
+
+		return model;
 	},
 
 	url : 'https://api.built.io/v1/classes/todo/objects/'
@@ -47,22 +74,18 @@ var TasksView = Backbone.View.extend({
 	tagName : 'ul',
 
 	initialize: function() {
+		this.collection.on('add', this.addOne, this);
 		this.render();
-		this.collection.on('add', this.addOne, this)
 	},
 
 	render: function() {
-		this.collection.models.forEach(this.addOne, this);
+		this.collection.forEach(this.addOne, this);
 		return this;
 	},
 
 	addOne : function(task) {
 		var taskView = new TaskView({model:task});
 		this.$el.append(taskView.render().el);
-	},
-
-	shout: function(task) {
-		console.log('Collection Changed');
 	}
 
 });
@@ -72,25 +95,68 @@ var TasksView = Backbone.View.extend({
 	Task View
 /-----------------------------------------*/
 var TaskView = Backbone.View.extend({
+
 	tagName : 'li',
 
-	initialize: function() {
-		//
-		this.model.on('change', this.shout, this);
+
+	template: _.template( $('#taskTemplate').html() ),
+
+	events : {
+		'click .delete' : 'destroy',
+		'click .edit' : 'editTask'
+	},
+
+	initialize: function(){
+		this.model.on("change", this.render, this);
 	},
 
 	render: function() {
-		this.$el.html(this.model.get('title'));
+		//console.log(this.model);
+		this.$el.html( this.template( this.model.toJSON() ) );
 		return this;
 	},
 
-	shout: function(task) {
-		console.log('Model Changed : ');
-		console.log(task);
-		this.render();	
+	destroy: function(){
+		console.log( 'Deleteing Object :' + this.model.get('id') );
+		this.$el.remove();
+		this.model.destroy({
+			success: console.log('Object Deleted')
+		});
+	},
+
+	editTask: function (){
+		console.log('Editing Task....');
+		var newTaskTitle = prompt("Editing mode...", this.model.get('title'));
+		var newTask = { title : newTaskTitle }; // Enclosing in object
+		this.model.set({ title : newTaskTitle });
+		this.model.save('object', newTask);
 	}
 });
 
+
+/*----------------------------------------/
+	Add Task View 
+/-----------------------------------------*/
+
+var AddTask = Backbone.View.extend({
+	el : '#addTask',
+
+	initialize: function() {
+	},
+
+	events: {
+		'submit' : 'submit'
+	},
+
+	submit: function(e) {
+		e.preventDefault();
+		var newTaskTitle = $(e.currentTarget).find('input[type=text]').val();
+		var task = new Task( { object : { title: newTaskTitle } } ); // wrapping in object for built
+		this.collection.create( task , {wait:true}); //Add object to collection and wait for response
+		//--- Clear Input Box ---//
+		$(e.currentTarget).find('input[type=text]').val('');
+	}
+});
 
 
 /*-------------------------------------------------------------/
@@ -100,14 +166,12 @@ var TaskView = Backbone.View.extend({
 */
 	var task = new Task;
 
-	var tasks = new Tasks;
+	var tasks = new Tasks();
 	tasks.fetch({
 		complete: ( function () {
 			//--- Testing : Show TaskView as response is recived  ---//
+			var addTaskView = new AddTask({collection: tasks });
 			var tasksView = new TasksView({collection:tasks});
-			console.log(tasksView.el);
-			$(document.body).html(tasksView.el);
+			$('.tasks').html(tasksView.el);
 		})
 	});
-
-
