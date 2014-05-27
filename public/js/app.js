@@ -21,7 +21,8 @@ var Task = Backbone.Model.extend({
 
 	defaults : {
 		id: null,
-		title: null
+		title: null,
+		completed: false
 	},
 
 	parse: function(response){
@@ -35,7 +36,6 @@ var Task = Backbone.Model.extend({
 
 	url: function(){
 		var modelURL = 'https://api.built.io/v1/classes/todo/objects/';
-		
 		if(this.id) {
 			return modelURL + this.id;
 		}
@@ -57,6 +57,7 @@ var Tasks = Backbone.Collection.extend({
 			return {
 				id:response.uid,
 				title:response.title,
+				completed:response.completed
 			}
 		});
 
@@ -98,12 +99,16 @@ var TaskView = Backbone.View.extend({
 
 	tagName : 'li',
 
+	className : 'task',
+
 
 	template: _.template( $('#taskTemplate').html() ),
 
 	events : {
 		'click .delete' : 'destroy',
-		'click .edit' : 'editTask'
+		'click .edit' : 'editTask',
+
+		'click [type="checkbox"]' : 'completed',
 	},
 
 	initialize: function(){
@@ -127,9 +132,18 @@ var TaskView = Backbone.View.extend({
 	editTask: function (){
 		console.log('Editing Task....');
 		var newTaskTitle = prompt("Editing mode...", this.model.get('title'));
+		newTaskTitle = $.trim(newTaskTitle);
+		if( !newTaskTitle ) return; // retun if newTaskTile is empty
 		var newTask = { title : newTaskTitle }; // Enclosing in object
-		this.model.set({ title : newTaskTitle });
+		this.model.set(newTask);
 		this.model.save('object', newTask);
+	},
+
+	completed : function(e) {
+		var checkBoxStatus = e.currentTarget.checked;
+		var newStatus = { completed : e.currentTarget.checked };
+		this.model.set(newStatus);
+		this.model.save('object', newStatus);	
 	}
 });
 
@@ -167,6 +181,7 @@ var AddTask = Backbone.View.extend({
 	var task = new Task;
 
 	var tasks = new Tasks();
+
 	tasks.fetch({
 		complete: ( function () {
 			//--- Testing : Show TaskView as response is recived  ---//
@@ -174,4 +189,4 @@ var AddTask = Backbone.View.extend({
 			var tasksView = new TasksView({collection:tasks});
 			$('.tasks').html(tasksView.el);
 		})
-	});
+	}, {reset:true});

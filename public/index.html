@@ -13,6 +13,9 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
+<!-- Custom Style -->
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
 </head>
 <body>
 
@@ -29,10 +32,23 @@
 
 	<div class="tasks">
 	<script id="taskTemplate" type="text/template">
-	<span>
-		<strong><%- title %></strong> <em>(uid : <%- id %>)</em>
-	</span>
-	 <button class="edit btn btn-link">Edit</button>  <button class="delete btn btn-link">Delete</button>
+		<% if(!completed) { %>
+			<span>
+				<input type="checkbox">
+				<strong><%- title %></strong> <em>(uid : <%- id %>)</em>
+				<button class="edit btn btn-link">Edit</button>  <button class="delete btn btn-link">Delete</button>
+			</span>
+		<% } %>
+
+		<% if(completed) { %>
+			<span class="completed-task">
+				<input type="checkbox" checked>
+				<strike>
+				<strong><%- title %></strong> <em>(uid : <%- id %>)</em>
+				</strike>
+				<button class="edit btn btn-link" disabled>Edit</button> <button class="delete btn btn-link">Delete</button>
+			</span>
+		<% } %>
 	</script>
 	</div>
 
