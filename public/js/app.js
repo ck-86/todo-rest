@@ -25,6 +25,13 @@ var Task = Backbone.Model.extend({
 		completed: false
 	},
 
+	validate: function(){
+		if(!this.get('object').title){
+			alert('Name is required');
+			return 'Name is required';
+		}
+	},
+
 	parse: function(response){
 		// Parse newly created model
 		if(response.object) {
@@ -107,8 +114,7 @@ var TaskView = Backbone.View.extend({
 	events : {
 		'click .delete' : 'destroy',
 		'click .edit' : 'editTask',
-
-		'click [type="checkbox"]' : 'completed',
+		'click [type="checkbox"]' : 'completed', //Checkbox event
 	},
 
 	initialize: function(){
@@ -183,10 +189,11 @@ var AddTask = Backbone.View.extend({
 	var tasks = new Tasks();
 
 	tasks.fetch({
+		// data : JSON.stringify( {"_method": "get","query": {"completed": true} } ),
+		// type: 'POST',
 		complete: ( function () {
-			//--- Testing : Show TaskView as response is recived  ---//
 			var addTaskView = new AddTask({collection: tasks });
 			var tasksView = new TasksView({collection:tasks});
 			$('.tasks').html(tasksView.el);
 		})
-	}, {reset:true});
+	});

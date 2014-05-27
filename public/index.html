@@ -53,6 +53,29 @@
 	</div>
 
 
+	<div class="completedTasks">
+	<script id="taskTemplate" type="text/template">
+		<% if(!completed) { %>
+			<span>
+				<input type="checkbox">
+				<strong><%- title %></strong> <em>(uid : <%- id %>)</em>
+				<button class="edit btn btn-link">Edit</button>  <button class="delete btn btn-link">Delete</button>
+			</span>
+		<% } %>
+
+		<% if(completed) { %>
+			<span class="completed-task">
+				<input type="checkbox" checked>
+				<strike>
+				<strong><%- title %></strong> <em>(uid : <%- id %>)</em>
+				</strike>
+				<button class="edit btn btn-link" disabled>Edit</button> <button class="delete btn btn-link">Delete</button>
+			</span>
+		<% } %>
+	</script>
+	</div>
+
+
 <script src="js/lib/underscore.js"></script>
 <script src="js/lib/backbone.js"></script>
 
