@@ -1,7 +1,22 @@
 .task {
 	list-style: none;
+	line-height: 3;
 }
 
 .completed-task{
 		color:#AAA;
+}
+
+.header-box{
+	margin: 20px;
+}
+
+.caption {
+	border:1px solid #CCC;
+	padding: 2px;
+	color: #CCC;
+}
+
+.task-box{
+	margin-left: 20px;
 }

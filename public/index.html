@@ -21,60 +21,48 @@
 
 
 	<div class="well">
-		<h4>Test</h4>
-		<form id="addTask" action=''>
+		
+		
+		<div class="header-box">
+			<h4>Todo</h4>
+			<span class="caption">basic todo app using built.io <b>RESTful</b> services</span>
+		</div>
+
+		<div class="task-box">
+			<form id="addTask" action=''>
 			<input  type="text" placeholder="new task">
-
 			<input type="submit" value="add" class="btn btn-sm btn-primary">
-		</form>
+			</form>
+		</div>
+		
 	</div>
-
 
 	<div class="tasks">
 	<script id="taskTemplate" type="text/template">
-		<% if(!completed) { %>
-			<span>
-				<input type="checkbox">
-				<strong><%- title %></strong> <em>(uid : <%- id %>)</em>
-				<button class="edit btn btn-link">Edit</button>  <button class="delete btn btn-link">Delete</button>
-			</span>
-		<% } %>
 
-		<% if(completed) { %>
-			<span class="completed-task">
-				<input type="checkbox" checked>
-				<strike>
-				<strong><%- title %></strong> <em>(uid : <%- id %>)</em>
-				</strike>
-				<button class="edit btn btn-link" disabled>Edit</button> <button class="delete btn btn-link">Delete</button>
-			</span>
-		<% } %>
+		<span>
+
+			<% if(completed) { %> <input type="checkbox" checked>
+			<% } else { %> <input type="checkbox"><% } %>
+
+			<strong><%- title %></strong> <em>(uid : <%- id %>) </em>
+
+			<% if(completed) { %>
+				<button class="edit btn btn-xs btn-warning" disabled>
+					<span class="glyphicon glyphicon-pencil"></span>
+				</button>
+			<% } else { %>
+				<button class="edit btn btn-xs btn-warning">
+					<span class="glyphicon glyphicon-pencil"></span>
+				</button>
+			<% } %>
+
+			<button class="delete btn btn-xs btn-danger">
+			<span class="glyphicon glyphicon-remove"></span>
+			</button>
+		</span>
 	</script>
 	</div>
-
-
-	<div class="completedTasks">
-	<script id="taskTemplate" type="text/template">
-		<% if(!completed) { %>
-			<span>
-				<input type="checkbox">
-				<strong><%- title %></strong> <em>(uid : <%- id %>)</em>
-				<button class="edit btn btn-link">Edit</button>  <button class="delete btn btn-link">Delete</button>
-			</span>
-		<% } %>
-
-		<% if(completed) { %>
-			<span class="completed-task">
-				<input type="checkbox" checked>
-				<strike>
-				<strong><%- title %></strong> <em>(uid : <%- id %>)</em>
-				</strike>
-				<button class="edit btn btn-link" disabled>Edit</button> <button class="delete btn btn-link">Delete</button>
-			</span>
-		<% } %>
-	</script>
-	</div>
-
 
 <script src="js/lib/underscore.js"></script>
 <script src="js/lib/backbone.js"></script>

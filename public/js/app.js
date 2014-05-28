@@ -26,10 +26,15 @@ var Task = Backbone.Model.extend({
 	},
 
 	validate: function(){
-		if(!this.get('object').title){
-			alert('Name is required');
-			return 'Name is required';
+
+		//If new model is created validate `title`
+		if(this.get('object')){
+			if(!this.get('object').title){
+				alert('Name is required');
+				return 'Name is required';
+			}
 		}
+
 	},
 
 	parse: function(response){
@@ -147,7 +152,12 @@ var TaskView = Backbone.View.extend({
 
 	completed : function(e) {
 		var checkBoxStatus = e.currentTarget.checked;
-		var newStatus = { completed : e.currentTarget.checked };
+
+		var newStatus = { 
+			title: this.model.get('title'), // Title is required or else model validation will fail
+			completed : e.currentTarget.checked 
+		};
+		
 		this.model.set(newStatus);
 		this.model.save('object', newStatus);	
 	}
