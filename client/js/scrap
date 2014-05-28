@@ -1,0 +1,36 @@
+
+/*//--- Task View for single task ---//
+var TaskView = Backbone.View.extend({
+	tagName : 'li',
+
+	template : _.template('Some data'),
+
+	initialize: function(){
+		this.render();
+	},
+
+	render: function(){
+		this.$el.html( _.template('<%= task.get("object").title %>') );
+		return this;
+	}
+});*/
+
+
+
+
+/*
+// Fetching Data From Built
+task.fetch({
+    success: (function () {
+        console.log(' Service request success: ');
+    }),
+    error: (function (e) {
+        console.log(' Service request failure: ');
+    }),
+    complete: (function (e) {
+        console.log(' Service request completed: ');
+        // Display item on complete
+        $(document.body).html( taskview.render().el );
+    })
+});
+*/
